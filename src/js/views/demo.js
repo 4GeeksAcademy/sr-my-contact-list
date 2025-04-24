@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 
 import { Context } from "../store/appContext";
@@ -6,38 +6,98 @@ import { Context } from "../store/appContext";
 import "../../styles/demo.css";
 
 export const Demo = () => {
-	const { store, actions } = useContext(Context);
+    const { actions } = useContext(Context);
 
-	return (
-		<div className="container">
-			<ul className="list-group">
-				{store.demo.map((item, index) => {
-					return (
-						<li
-							key={index}
-							className="list-group-item d-flex justify-content-between"
-							style={{ background: item.background }}>
-							<Link to={"/single/" + index}>
-								<span>Link to: {item.title}</span>
-							</Link>
-							{// Conditional render example
-							// Check to see if the background is orange, if so, display the message
-							item.background === "orange" ? (
-								<p style={{ color: item.initial }}>
-									Check store/flux.js scroll to the actions to see the code
-								</p>
-							) : null}
-							<button className="btn btn-success" onClick={() => actions.changeColor(index, "orange")}>
-								Change Color
-							</button>
-						</li>
-					);
-				})}
-			</ul>
-			<br />
-			<Link to="/">
-				<button className="btn btn-primary">Back home</button>
-			</Link>
-		</div>
-	);
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        phone: '',
+        address: ''
+    });
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value
+        });
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        actions.agregarContacto(formData);
+        setFormData({
+            name: '',
+            email: '',
+            phone: '',
+            address: ''
+        });
+    };
+
+    return (
+        <div className="container">
+            <div className="d-flex justify-content-center">
+			<h1 className="text-center">
+                <i className="fa-solid fa-face-smile mx-2"></i>Crear Nuevo Contacto
+            </h1>
+            </div>
+            <form onSubmit={handleSubmit}>
+                <div className="mb-3">
+                    <label htmlFor="name" className="form-label">Nombre y Apellido</label>
+                    <input 
+                        type="text" 
+                        className="form-control" 
+                        id="name" 
+                        name="name" 
+                        placeholder="Full Name" 
+                        value={formData.name} 
+                        onChange={handleInputChange}
+                    />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="email" className="form-label">Email</label>
+                    <input 
+                        type="text" 
+                        className="form-control" 
+                        id="email" 
+                        name="email" 
+                        placeholder="Enter email" 
+                        value={formData.email} 
+                        onChange={handleInputChange}
+                    />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="phone" className="form-label">Teléfono</label>
+                    <input 
+                        type="text" 
+                        className="form-control" 
+                        id="phone" 
+                        name="phone" 
+                        placeholder="Enter phone" 
+                        value={formData.phone} 
+                        onChange={handleInputChange}
+                    />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="address" className="form-label">Dirección</label>
+                    <input 
+                        type="text" 
+                        className="form-control" 
+                        id="address" 
+                        name="address" 
+                        placeholder="Enter address" 
+                        value={formData.address} 
+                        onChange={handleInputChange}
+                    />
+                </div>
+                <button className="btn btn-primary col-12">Guardar</button>
+            </form>
+            <br />
+            <Link to="/" 
+                        className="back-contacts-link"
+                    >
+                        Volver A Mis Contactos
+            </Link>
+        </div>
+    );
 };
